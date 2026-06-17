@@ -54,7 +54,11 @@ Run the ingestion layer to harvest fresh postings:
 
 Bash
    ./bin/fetch_jobs
-Run the local AI screening layer to filter high-intent targets:
 
-Bash
-   ./bin/screen_with_llama
+### AI Screening Configuration
+Before running the evaluation layer, you must configure your local inference engine. **[Read the Local LLM Setup Guide](LLM_SETUP.md)** to install and configure Ollama.
+
+Once running, execute the evaluation script to process your raw CSV:
+```bash
+./bin/screen_with_llama
+```
