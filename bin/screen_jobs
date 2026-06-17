@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use FreeworldJobFinder\Screener\JobScreener;
+
+$inputCsv = __DIR__ . '/../raw_netherlands_jobs.csv';
+$outputCsv = __DIR__ . '/../screened_jobs.csv';
+
+try {
+    $screener = new JobScreener();
+    $screener->run($inputCsv, $outputCsv);
+} catch (\Exception $e) {
+    echo "Fatal Error: " . $e->getMessage() . "\n";
+    exit(1);
+}

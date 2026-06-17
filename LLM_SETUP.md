@@ -23,7 +23,7 @@ ollama run llama3
 *Note: This will download the model weights (approx. 4.7GB). Once the download finishes and drops you into a chat prompt, simply type `/bye` to exit. The Ollama service will remain actively running in the background.*
 
 ## 3. Verify the API
-The `LlamaScreener.php` engine expects the Ollama API to be listening locally. Verify the connection by running a quick ping in your terminal:
+The `OllamaAdapter` engine expects the Ollama API to be listening locally. Verify the connection by running a quick ping in your terminal:
 ```bash
 curl http://localhost:11434/api/generate -d '{
   "model": "llama3",
@@ -37,7 +37,7 @@ Once the `php-jobspy` ingestion layer has generated the raw data (`./bin/fetch_j
 
 Run the screening script:
 ```bash
-./bin/screen_with_llama
+./bin/screen_jobs
 ```
 
 ### What happens under the hood?

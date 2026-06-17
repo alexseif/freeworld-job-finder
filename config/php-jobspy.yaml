@@ -7,5 +7,15 @@ php_jobspy:
   search_term: 'Senior PHP Developer'
   location: 'Netherlands'
   results_wanted: 20
-  hours_old: 72
   country_integrity: 'netherlands'
+
+screener:
+  provider: 'ollama' # 'ollama', 'openai', 'anthropic'
+  model: 'llama3' # 'gpt-4o-mini', 'claude-3-haiku-20240307'
+  system_prompt: "You are an expert technical recruiter evaluating jobs. Does this job clearly require PHP and match a Senior level? Reply ONLY with the exact word 'YES' if it is a strong match, or 'NO' if it is not."
+  ollama:
+    base_uri: 'http://localhost:11434/api/generate'
+  openai:
+    api_key: 'YOUR_OPENAI_API_KEY'
+  anthropic:
+    api_key: 'YOUR_ANTHROPIC_API_KEY'

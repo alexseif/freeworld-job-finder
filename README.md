@@ -60,5 +60,5 @@ Before running the evaluation layer, you must configure your local inference eng
 
 Once running, execute the evaluation script to process your raw CSV:
 ```bash
-./bin/screen_with_llama
+./bin/screen_jobs
 ```
