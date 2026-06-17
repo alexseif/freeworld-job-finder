@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9ec3e7e3de136cae24536d585dbda486",
+    "content-hash": "7bb109ec1c84400c0611e7c07993af46",
     "packages": [
         {
             "name": "freeworld/php-jobspy",
@@ -12,11 +12,11 @@
             "dist": {
                 "type": "path",
                 "url": "php-jobspy",
-                "reference": "7f2238f2bd336c89d157441ab043586645f9ef0c"
+                "reference": "2c80ba8b38a0483805764560a873ef71399942a4"
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.12",
-                "php": ">=8.1"
+                "php": "^8.2 || ^8.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "^10.0"
@@ -910,7 +910,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.1",
+        "php": "^8.2 || ^8.3",
         "ext-curl": "*",
         "ext-json": "*"
     },
