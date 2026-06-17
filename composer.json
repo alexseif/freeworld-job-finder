@@ -5,8 +5,16 @@
     "require": {
         "php": ">=8.1",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "freeworld/php-jobspy": "*"
     },
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "php-jobspy"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "FreeworldJobFinder\\": "src/"

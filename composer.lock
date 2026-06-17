@@ -4,11 +4,42 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d5a20817aebdbec92035d6c345ad9f51",
-    "packages": [],
+    "content-hash": "637bb3284b65f49bbba4cc6f028fedbf",
+    "packages": [
+        {
+            "name": "freeworld/php-jobspy",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "php-jobspy",
+                "reference": "f39b524d9e685ee0a2b92128707fd2b0b1685bb5"
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Freeworld\\PhpJobspy\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Freeworld\\PhpJobspy\\Tests\\": "tests/"
+                }
+            },
+            "description": "A PHP library to scrape job listings from various boards, inspired by python-jobspy.",
+            "transport-options": {
+                "relative": true
+            }
+        }
+    ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,

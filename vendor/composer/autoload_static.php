@@ -9,11 +9,16 @@ class ComposerStaticInitd5a20817aebdbec92035d6c345ad9f51
     public static $prefixLengthsPsr4 = array (
         'F' => 
         array (
+            'Freeworld\\PhpJobspy\\' => 20,
             'FreeworldJobFinder\\' => 19,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Freeworld\\PhpJobspy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/freeworld/php-jobspy/src',
+        ),
         'FreeworldJobFinder\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',

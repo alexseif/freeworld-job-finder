@@ -6,5 +6,6 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Freeworld\\PhpJobspy\\' => array($vendorDir . '/freeworld/php-jobspy/src'),
     'FreeworldJobFinder\\' => array($baseDir . '/src'),
 );
