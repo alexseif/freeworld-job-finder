@@ -18,25 +18,29 @@ The system currently operates as a simple, linear data-processing pipeline:
 freeworld-job-finder/
 ├── .gitignore
 ├── README.md
-└── scripts/
-    ├── fetch_jobs.py          # Aggregates raw listings into local CSV
-    └── screen_with_llama.py   # Processes data using local Llama inference
+├── ROADMAP.md
+├── composer.json
+├── bin/
+│   ├── fetch_jobs             # Executable to run ingestion layer
+│   └── screen_with_llama      # Executable to run inference layer
+└── src/
+    ├── Fetcher/               # Domain logic for data aggregation
+    └── Screener/              # Domain logic for Llama evaluation
 Getting Started
 Prerequisites
-Python 3.10+
+PHP 8.1+
 
 A locally running Llama instance (via Ollama or similar local inference engine)
 
 Setup & Execution
-Clone the repository and install dependencies:
+Clone the repository:
+(Composer dependencies will be added in Phase 2)
 
-Bash
-   pip install python-jobspy pandas requests
 Run the ingestion layer to harvest fresh postings:
 
 Bash
-   python3 scripts/fetch_jobs.py
+   ./bin/fetch_jobs
 Run the local AI screening layer to filter high-intent targets:
 
 Bash
-   python3 scripts/screen_with_llama.py
+   ./bin/screen_with_llama

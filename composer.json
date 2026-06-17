@@ -1,0 +1,15 @@
+{
+    "name": "freeworld/job-finder",
+    "description": "A local AI-driven pipeline designed to scrape and evaluate job listings.",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "FreeworldJobFinder\\": "src/"
+        }
+    }
+}
