@@ -2,11 +2,19 @@
     "name": "freeworld/job-finder",
     "description": "A local AI-driven pipeline designed to scrape and evaluate job listings.",
     "type": "project",
+    "authors": [
+        {
+            "name": "Alex Seif",
+            "email": "alex.seif@gmail.com",
+            "homepage": "https://alexseif.com"
+        }
+    ],
     "require": {
         "php": ">=8.1",
         "ext-curl": "*",
         "ext-json": "*",
-        "freeworld/php-jobspy": "*"
+        "freeworld/php-jobspy": "*",
+        "symfony/yaml": "7.4.x-dev"
     },
     "minimum-stability": "dev",
     "repositories": [

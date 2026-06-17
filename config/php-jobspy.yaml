@@ -1,0 +1,11 @@
+# config/php-jobspy.yaml
+# Configuration for the php-jobspy package
+
+php_jobspy:
+  site_name: 
+    - linkedin
+  search_term: 'Senior PHP Developer'
+  location: 'Netherlands'
+  results_wanted: 20
+  hours_old: 72
+  country_integrity: 'netherlands'

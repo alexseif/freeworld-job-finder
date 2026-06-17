@@ -36,6 +36,20 @@ Setup & Execution
 Clone the repository:
 (Composer dependencies will be added in Phase 2)
 
+### Search Configuration
+Configure your job search parameters in the `config/php-jobspy.yaml` file:
+```yaml
+php_jobspy:
+  site_name: 
+    - linkedin
+  search_term: 'Senior PHP Developer'
+  location: 'Netherlands'
+  results_wanted: 20
+  hours_old: 72
+  country_integrity: 'netherlands'
+```
+You can modify these parameters at any time without altering the codebase.
+
 Run the ingestion layer to harvest fresh postings:
 
 Bash

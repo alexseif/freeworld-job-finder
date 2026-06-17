@@ -28,3 +28,20 @@ When operating bots or automated scripts to scrape job boards and apply to jobs,
 1. **Precision Over Volume**: Only apply to roles that are highly relevant (screened by our local LLM). Spray-and-pray tactics burden recruiters and platform infrastructure.
 2. **Platform Terms of Service (ToS)**: Many job platforms strictly prohibit automated applications. Use official APIs (if available) rather than browser automation for applying, or have the AI prepare the application drafts for a human to review and submit with one click.
 3. **No Deception**: Do not use AI to generate fabricated experiences or deceive recruiters. AI should only be used to highlight actual, factual experiences that align with the job description.
+
+### Future Integration Notes
+- For Phase 3 (Database Persistence), use standard Doctrine ORM or raw PDO with prepared statements.
+- Avoid tight coupling. Data flow linearly: Ingestion -> Processing -> Persistence.
+
+## Configuration Standards
+- Use **YAML** for robust, human-readable configuration, adhering to Symfony/Laravel standard practices. 
+- Configurations should reside in the `config/` directory (e.g., `config/php-jobspy.yaml`).
+
+## Roadblocks & Error Catching
+When scraping job boards at scale, anticipate the following roadblocks and adhere to these graceful error-handling principles:
+1. **AuthWalls & IP Blocks:** Job boards aggressively block automated traffic. 
+    * *Handling:* Scrapers must catch HTTP errors (like 429/999) gracefully and return an empty array rather than throwing a fatal exception. Future iterations should implement proxy rotation or headless browser simulation (Panther/Selenium).
+2. **DOM Volatility:** CSS classes and XPath selectors change without warning.
+    * *Handling:* Use fuzzy matching (`contains()`), multiple fallback XPaths, and suppress HTML5 parsing warnings. If an element cannot be found, default to `'Unknown'` rather than breaking the entity.
+3. **Network Timeouts:** Requests can hang.
+    * *Handling:* Always enforce strict HTTP client timeouts (e.g., 15 seconds via Guzzle) to prevent the pipeline from hanging indefinitely.
