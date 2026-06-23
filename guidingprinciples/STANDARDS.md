@@ -33,9 +33,13 @@ The ecosystem is built on a rigid, immutable technology stack. No alternatives a
 *   **Core Operational Data**: Must be normalized strictly to the **3rd Normal Form (3NF)** to eliminate all redundancy.
 *   **Analytics Schema**: Optimized using a **Star Schema** layout (Fact and Dimension tables) to facilitate rapid local context extraction for the LLM.
 
-## Ethical Web Scraping Guidelines
+### 5. Dependency Evaluation
+*   **Package Assessment**: Before building custom solutions, always assess available established packages in the community. Crucially, evaluate if the package is bloated or overkill for the specific task before incorporating it. Do not reinvent the wheel, but prioritize lightweight, native solutions if an external dependency introduces unnecessary complexity.
 
-All automated data ingestion pipelines must abide by the following ethical constraints:
+## Ethical Web Scraping & Platform Guidelines
+
+All automated data ingestion, API interactions, and content publishing pipelines must abide by the following ethical constraints:
+*   **Platform Terms of Service**: Strict adherence to the Terms & Conditions and API usage policies of all external platforms (e.g., Twitter, Dev.to, LinkedIn, Reddit). Do not circumvent API limits, deploy spam, or automate actions expressly prohibited by the platform.
 *   **Robots.txt Compliance**: Strict, unyielding adherence to `robots.txt` directives on target domains.
 *   **Rate Limiting**: Mandatory randomized sleep intervals between **3.5 to 7.0 seconds** to bypass behavioral blocks and respect host load.
 *   **Transparency**: Explicit, identifiable `User-Agent` strings defining the scraper's purpose.
