@@ -22,86 +22,123 @@ It is **not** a web app, not a scraping service, and not an AI pipeline. It is a
 
 ---
 
-## 2. Current Capabilities
+## 2. Target API & Data Schema (Python Parity)
 
-| Feature | Status |
-|---|---|
-| LinkedIn public SERP scraping | ✅ Implemented (auth-wall prone) |
-| Job list export to CSV | ✅ Implemented |
-| Job description deep-fetch | ❌ Placeholder string only |
-| Unit tests for scraper | ❌ Not yet written |
-| Indeed / Glassdoor support | ❌ Roadmap |
+To maintain parity with `python-jobspy`, the `Jobspy` class must support the following input schema and output a standard `JobPost` structure.
 
----
+### 2.1 Input Parameters
 
-## 3. Immediate Work Item — Deep-Fetch
-
-### Problem
-`LinkedInScraper::scrape()` sets `'description' => 'Description omitted in public SERP list. Requires deep fetching.'` as a placeholder. The downstream `JobScreener` receives this string and sends it to the LLM. The AI is evaluating job titles only. Every screening decision is made blind.
-
-### Solution
-Add `fetchJobDescription(string $url): string` method to `LinkedInScraper`. Called optionally per job when `$args['deep_fetch'] === true`.
-
-**Method contract:**
-- Input: clean LinkedIn job URL (already normalized in scrape())
-- Output: plain text job description, HTML-stripped
-- On failure (auth wall, timeout, network): return `'Description unavailable.'` (silent fallback — no exception thrown)
-- Polite delay: 500ms between deep-fetch requests via `usleep(500000)`
-
-**LinkedIn DOM selectors to try (in order):**
-1. `//div[contains(@class,'show-more-less-html__markup')]`
-2. `//div[contains(@class,'description__text')]`
-3. `//section[contains(@class,'core-section-container__content')]`
-
-**Integration into `scrape()`:**
 ```php
-if (!empty($args['deep_fetch'])) {
-    $jobs[count($jobs)-1]['description'] = $this->fetchJobDescription($cleanUrl);
-    usleep(500000);
+public function scrapeJobs(array $args): array
+{
+    // Target Parameter Schema:
+    // 'site_name' => array|string, // e.g. ['linkedin', 'indeed', 'zip_recruiter', 'glassdoor']
+    // 'search_term' => string,
+    // 'location' => string,
+    // 'distance' => int, // in miles
+    // 'job_type' => string, // fulltime, parttime, internship, contract
+    // 'proxies' => array, // ['user:pass@host:port', 'localhost']
+    // 'is_remote' => bool,
+    // 'results_wanted' => int,
+    // 'easy_apply' => bool,
+    // 'offset' => int,
+    // 'hours_old' => int,
+    // 'linkedin_fetch_description' => bool,
 }
 ```
 
-**Config flag:** Document `deep_fetch: true/false` in `config/php-jobspy.yaml` as an opt-in.
+### 2.2 Output Structure (`JobPostDTO`)
+
+To enforce strict type safety and adhere to the `php-modernization-skill`, the returned array of jobs must be hydrated into a strongly typed DTO (`readonly class` or similar) matching this schema:
+
+```php
+readonly class JobPostDTO {
+    public string $site;
+    public string $title;
+    public string $company;
+    public string $company_url;
+    public string $job_url;
+    public string $location; // format: "City, State, Country"
+    public bool $is_remote;
+    public string $description;
+    public ?string $job_type;
+    public ?string $interval; // yearly, monthly, weekly, daily, hourly
+    public int|float|null $min_amount;
+    public int|float|null $max_amount;
+    public ?string $currency;
+    public ?string $date_posted; // string/datetime
+}
+```
+
+## 3. Current Capabilities vs. Roadmap
+
+| Feature | Status |
+|---|---|
+| Job list export to CSV | ✅ Implemented |
+| Output matching JobPost Schema | ❌ Partial (needs alignment) |
+| Scrape-friendly Provider (Indeed/ZipRecruiter) | ❌ Immediate Focus |
+| Pagination & Proxies | ❌ Roadmap |
+| LinkedIn public SERP scraping | ✅ Implemented (auth-wall prone, paused) |
+| Glassdoor / Google Jobs / Bayt | ❌ Roadmap |
+| Unit tests for scraper | ❌ Not yet written |
 
 ---
 
-## 4. Tech Stack
+## 4. Immediate Work Item — Scrape-Friendly Provider Integration
+
+### Problem
+The current implementation started with LinkedIn, which is notoriously hostile to automated scraping (aggressive rate limiting, auth-walls, and forced CAPTCHAs). Continuing to build the core architecture around LinkedIn's quirks will slow down development and require complex proxy management immediately.
+
+### Solution
+Pivot the initial development focus to a more scrape-friendly provider (e.g., Indeed, ZipRecruiter, or Bayt). Python `jobspy` explicitly notes that Indeed is currently the best scraper with minimal rate limiting, making it an ideal candidate to establish the core pipeline.
+
+**Action Plan:**
+1. Choose the most permissive job board from the expected provider list.
+2. Implement the `ScraperInterface` for this new provider.
+3. Establish the HTTP request flow, HTML parsing (or JSON API interception), and map the output precisely to the `JobPost` schema defined in Section 2.2.
+4. Ensure the downstream `JobScreener` pipeline can cleanly receive this data without needing a "deep-fetch" workaround (as scrape-friendly sites often include the description in the initial payload or a simple secondary open request).
+
+Once the core architecture and output schema are solidified with a stable provider, we can re-introduce LinkedIn behind a proxy rotation manager in Phase 2.
+
+---
+
+## 5. Tech Stack
 
 | Layer | Technology |
 |---|---|
 | Language | PHP 8.1+ (strict_types) |
-| HTTP Client | Guzzle 7 |
-| HTML Parser | DOMDocument + DOMXPath (native PHP) |
-| Config | symfony/yaml |
+| HTTP Client | `symfony/http-client` (PSR-18 compatible, natively async) |
+| HTML Parser | `symfony/dom-crawler` + `symfony/css-selector` |
+| Config | `symfony/yaml` |
 | Testing | PHPUnit |
 | Package Manager | Composer |
 
-**Constraint:** No new Composer dependencies without explicit approval.
+**Constraint:** Stick to Symfony components to maintain enterprise stability and avoid bloat.
 
 ---
 
-## 5. Testing Standards
+## 6. Testing Standards
 
 | Type | Command | Required For |
 |---|---|---|
 | Unit tests | `composer test` | Every commit |
 | Static analysis | (future) PHPStan | Roadmap |
 
-Tests use mock Guzzle clients — no live network calls in the test suite.
+Tests use mock HTTP clients (`Symfony\Component\HttpClient\MockHttpClient`) — no live network calls in the test suite.
 
 ---
 
-## 6. Code Style
+## 7. Code Style & Git Workflow
 
-- `declare(strict_types=1)` on every file
-- PSR-4 autoloading: `Freeworld\PhpJobspy\`
-- Methods return typed values — no `mixed` in new code
-- Doc blocks on all public methods
-- Silent failure over exception propagation for network-layer errors
+- **PSR & PER-CS**: Code must strictly conform to PER-CS (superseding PSR-12).
+- **Type Safety**: `declare(strict_types=1)` on every file. Methods return typed values. Use DTOs instead of raw associative arrays (`php-modernization-skill`).
+- **Interfaces**: Code against PSR interfaces (e.g., `Psr\Http\Client\ClientInterface`) instead of concrete classes where possible.
+- **Git Workflow**: Use proper branch structures (`feat/`, `fix/`, `test/`) and semantic commit messages for all tasks. Commits must pass tests.
+- **Error Handling**: Silent failure over exception propagation for network-layer errors.
 
 ---
 
-## 7. Boundaries
+## 8. Boundaries
 
 ### Always
 - Keep this as a library — no HTTP endpoints, no CLI commands in this package
